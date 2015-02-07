@@ -13,9 +13,9 @@ public class Test {
     Client cliente = Client.create(config);
     WebResource servicio = cliente.resource(getBaseURI());
     // Conseguir XML
-    System.out.println(servicio.path("rest").path("todos/1").accept(MediaType.TEXT_XML).get(String.class));
+    System.out.println(servicio.path("rest").path("usuarios").accept(MediaType.TEXT_XML).get(String.class));
     // Conseguir XML para la aplicacion
-    System.out.println(servicio.path("rest").path("todos/2").accept(MediaType.APPLICATION_XML).get(String.class));
+    System.out.println(servicio.path("rest").path("usuarios").accept(MediaType.APPLICATION_XML).get(String.class));
   }
   private static URI getBaseURI(){
 return UriBuilder.fromUri("http://localhost:8080/DSBCS_Tutorial_Jersey").build();
