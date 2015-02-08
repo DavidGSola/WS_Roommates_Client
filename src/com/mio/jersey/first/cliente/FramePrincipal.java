@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -219,8 +220,13 @@ public class FramePrincipal extends JFrame implements ActionListener
 				ClientConfig config = new DefaultClientConfig();
 				Client cliente = Client.create(config);
 				WebResource servicio = cliente.resource(getBaseURI());
-				String usuarioXML = servicio.path("rest").path("usuarios/"+areaNick.getText()).accept(MediaType.TEXT_XML).get(String.class);
-				
+				String usuarioXML = null;
+				try {
+					usuarioXML = servicio.path("rest").path("usuarios/"+areaNick.getText()).accept(MediaType.TEXT_XML).get(String.class);
+				} catch (com.sun.jersey.api.client.UniformInterfaceException ex) {
+					JOptionPane.showMessageDialog(this, "Usuario incorrecto");
+				}
+			
 				// Parseamos el String
 				sp.parse(new InputSource(new StringReader(usuarioXML)), handler);
 				ArrayList<Usuario> usuarios = handler.getList();

@@ -43,17 +43,17 @@ public class PanelCompanieros extends JPanel implements ActionListener
 	FramePrincipal fPrincipal;
 	
 	/**
-	 * Botón de registrar un usuario
+	 * Boton de registrar un usuario
 	 */
 	private JButton jbRegistrarse;
 	
 	/**
-	 * Botón de eliminar un usuario
+	 * Boton de eliminar un usuario
 	 */
 	private JButton jbEliminar;
 	
 	/**
-	 * Botón de salir
+	 * Boton de salir
 	 */
 	private JButton jbSalir;
 	
@@ -146,7 +146,7 @@ public class PanelCompanieros extends JPanel implements ActionListener
 			// Parseamos el String
 			sp.parse(new InputSource(new StringReader(usuariosXML)), handler);
 			
-			// Leemos los usuarios a través del handler
+			// Leemos los usuarios a traves del handler
 			ArrayList<Usuario> usuarios = handler.getList();
 			
 			// Añadimos la lista a la lista interna de los usuarios
@@ -221,9 +221,9 @@ public class PanelCompanieros extends JPanel implements ActionListener
 	}
 	
 	/**
-	 * Elimina un usuario a través del servicio web
+	 * Elimina un usuario a traves del servicio web
 	 * @param usuario Usuario a eliminar
-	 * @return Exito de la operación
+	 * @return Exito de la operacion
 	 */
 	private boolean eliminarUsuario(Usuario usuario)
 	{

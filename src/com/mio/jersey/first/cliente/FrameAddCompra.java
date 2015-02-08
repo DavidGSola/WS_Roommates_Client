@@ -8,9 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -100,7 +98,7 @@ public class FrameAddCompra extends JFrame implements ActionListener
 		jtfNombre.setColumns(10);
 		this.add(jtfNombre);
 		
-		JLabel jlDescripcion = new JLabel("Descripción:");
+		JLabel jlDescripcion = new JLabel("Descripci\u00F3n:");
 		jlDescripcion.setFont(new Font("Calibri", Font.PLAIN, (24)));
 		jlDescripcion.setBounds(20, 60, 500, 90);
 		this.add(jlDescripcion);
@@ -136,15 +134,12 @@ public class FrameAddCompra extends JFrame implements ActionListener
 			Compra compra= null;
 			if(jtfNombre.getText().length()!=0 && jtfDescripcion.getText().length()!=0)
 			{
-				// Se actualiza la fecha a la actual
-				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-				Calendar cal = Calendar.getInstance();
-				compra = registrarCompra(new Compra(fPrincipal.getUsuarioSesion(), jtfNombre.getText(), jtfDescripcion.getText(), dateFormat.format(cal.getTime())));
+				compra = registrarCompra(new Compra(fPrincipal.getUsuarioSesion(), jtfNombre.getText(), jtfDescripcion.getText(), new Date().getTime()+""));
 			}
 			else
 				JOptionPane.showMessageDialog(this, "Debe rellenar todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 			
-			// Si se registra con exito lo añadimos a la tabla del frame principal
+			// Si se registra con exito lo anidimos a la tabla del frame principal
 			if(compra != null)
 			{
 				if(fPrincipal != null)
@@ -166,6 +161,7 @@ public class FrameAddCompra extends JFrame implements ActionListener
 	 */
 	private Compra registrarCompra(Compra compra)
 	{
+		System.out.println(compra.getFecha());
 		ClientConfig config = new DefaultClientConfig();
 		Client cliente = Client.create(config);
 		WebResource servicio = cliente.resource(FramePrincipal.getBaseURI());

@@ -101,7 +101,7 @@ public class FrameAddFactura extends JFrame implements ActionListener
 		jtfNombre.setColumns(10);
 		this.add(jtfNombre);
 		
-		JLabel jlDescripcion = new JLabel("Descripcion:");
+		JLabel jlDescripcion = new JLabel("Descripci\u00F3n:");
 		jlDescripcion.setFont(new Font("Calibri", Font.PLAIN, (24)));
 		jlDescripcion.setBounds(20, 60, 500, 90);
 		this.add(jlDescripcion);
@@ -150,13 +150,16 @@ public class FrameAddFactura extends JFrame implements ActionListener
 			Factura factura= null;
 			if(jtfNombre.getText().length()!=0 && jtfDescripcion.getText().length()!=0 && jtfCantidad.getText().length()!=0)
 			{
-				double cantidad;
+				double cantidad = 0;
 				try{
 					cantidad = Double.parseDouble(jtfCantidad.getText());
+					factura = registrarFactura(new Factura(jtfNombre.getText(), jtfDescripcion.getText(), new Date().getTime()+"", cantidad, fPrincipal.getListaUsuarios()));
 				} catch (java.lang.NumberFormatException ex) {
-					cantidad = Double.parseDouble(jtfCantidad.getText().replace(',','.'));
+					JOptionPane.showMessageDialog(this,
+							"Formato de numero incorrecto:\n 000.00",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
 				}
-				factura = registrarFactura(new Factura(jtfNombre.getText(), jtfDescripcion.getText(), new Date().getTime()+"", cantidad, fPrincipal.getListaUsuarios()));
 			}
 			else
 				JOptionPane.showMessageDialog(this, "Debe rellenar todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
