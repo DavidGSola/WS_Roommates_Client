@@ -71,12 +71,12 @@ public class FramePrincipal extends JFrame implements ActionListener
 	private JButton jbRegistrarInicio;
 
 	/**
-	 * Panel de pestañas
+	 * Panel de pestanias
 	 */
 	private JTabbedPane panelPestanias;
 	
 	/**
-	 * Referencia al panel de compañeros
+	 * Referencia al panel de companieros
 	 */
 	private PanelCompanieros panelCompanieros;
 
@@ -84,9 +84,14 @@ public class FramePrincipal extends JFrame implements ActionListener
 	 * Referencia al panel de compras
 	 */
 	private PanelCompras panelCompras;
+
+	/**
+	 * Referencia al panel de compras
+	 */
+	private PanelFacturas panelFacturas;
 	
 	/**
-	 * Usuario con la sesión activa
+	 * Usuario con la sesion activa
 	 */
 	private Usuario usuarioSesion;
 	
@@ -111,7 +116,7 @@ public class FramePrincipal extends JFrame implements ActionListener
 	}
 
 	/**
-	 * Crea la aplicación
+	 * Crea la aplicacion
 	 */
 	public FramePrincipal() 
 	{
@@ -179,10 +184,13 @@ public class FramePrincipal extends JFrame implements ActionListener
 		panelPestanias = new JTabbedPane();
 		
 		panelCompanieros = new PanelCompanieros(this);
-		panelPestanias.addTab("Compañeros", panelCompanieros);
+		panelPestanias.addTab("Compa\u00F1eros", panelCompanieros);
 		
 		panelCompras = new PanelCompras(this);
 		panelPestanias.addTab("Compras", panelCompras);
+		
+		panelFacturas = new PanelFacturas(this);
+		panelPestanias.addTab("Facturas", panelFacturas);
 		
 		getContentPane().removeAll();
 		getContentPane().add(panelPestanias);
@@ -242,7 +250,7 @@ public class FramePrincipal extends JFrame implements ActionListener
 	}
 
 	/**
-	 * Actualiza la tabla de comapañeros
+	 * Actualiza la tabla de comapanieros
 	 */
 	public void actualizaTablaUsuarios()
 	{
@@ -250,7 +258,7 @@ public class FramePrincipal extends JFrame implements ActionListener
 	}
 	
 	/**
-	 * Añade una compra a la tabla que muestra la lista de los usuarios de la lista de correo
+	 * Aniade una compra a la tabla que muestra la lista de los usuarios de la lista de correo
 	 * @param compra
 	 */
 	public void actualizaTablaCompra()
