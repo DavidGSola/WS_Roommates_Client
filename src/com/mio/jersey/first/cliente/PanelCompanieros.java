@@ -211,6 +211,7 @@ public class PanelCompanieros extends JPanel implements ActionListener
 				{
 					actualizaTablaUsuarios();
 					fPrincipal.actualizaTablaCompra();
+					fPrincipal.actualizaTablaFacturas();
 				}
 			}
 		}else if(actionCommand.equals("salir"))
