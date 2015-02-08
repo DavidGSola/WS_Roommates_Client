@@ -43,22 +43,22 @@ public class PanelCompras extends JPanel implements ActionListener
 	FramePrincipal fPrincipal;
 	
 	/**
-	 * Botón de añadir compra
+	 * Boton de aniadir compra
 	 */
 	private JButton jbAddCompra;
 	
 	/**
-	 * Botón de eliminar compra
+	 * Boton de eliminar compra
 	 */
 	private JButton jbEliminar;
 	
 	/**
-	 * Botón de realizar compra
+	 * Boton de realizar compra
 	 */
 	private JButton jbComprar;
 	
 	/**
-	 * Botón de salir
+	 * Boton de salir
 	 */
 	private JButton jbSalir;
 	
@@ -106,10 +106,10 @@ public class PanelCompras extends JPanel implements ActionListener
 		scrollPane.setBounds(20, 10, 540, 240);
 		this.add(scrollPane);
 	
-		// Rellenamos la tabla con las compras que hay en el serviciow eb
+		// Rellenamos la tabla con las compras que hay en el servicio web
 		rellenarTabla();
 		
-		jbAddCompra = new JButton("Añadir Compra");
+		jbAddCompra = new JButton("A\u00F1adir Compra");
 		jbAddCompra.addActionListener(this);
 		jbAddCompra.setActionCommand("addCompra");
 		jbAddCompra.setFont(new Font("Calibri", Font.PLAIN, (16)));
@@ -147,13 +147,13 @@ public class PanelCompras extends JPanel implements ActionListener
 		SAXParserFactory spfac = SAXParserFactory.newInstance();
 
 		try {
-        	// Utilizamos dicha factoría para crear un objeto SAXParser
+        	// Utilizamos dicha factoria para crear un objeto SAXParser
         	SAXParser sp = spfac.newSAXParser();
 			
         	// Creamos el handler del Parser para las Compras
 			ParserCompra handler = new ParserCompra();
 			
-			// Hacemos la llamada al servicio web que nos devolverá un XML con las Compras
+			// Hacemos la llamada al servicio web que nos devolvera un XML con las Compras
 			ClientConfig config = new DefaultClientConfig();
 			Client cliente = Client.create(config);
 			WebResource servicio = cliente.resource(FramePrincipal.getBaseURI());
@@ -162,13 +162,13 @@ public class PanelCompras extends JPanel implements ActionListener
 			// Parseamos el String
 			sp.parse(new InputSource(new StringReader(comprasXML)), handler);
 			
-			// Leemos las compras a través del handler
+			// Leemos las compras a traves del handler
 			ArrayList<Compra> compras = handler.getList();
 			
-			// Añadimos la lista a la lista interna de las compras
+			// Aniadimos la lista a la lista interna de las compras
 			listaCompras.addAll(compras);
 			
-			// Añadimos las compras a la tabla
+			// Aniadimos las compras a la tabla
 			DefaultTableModel model = (DefaultTableModel) jtCompras.getModel();
 			for(Compra compra: compras)
 				model.addRow(new Object[]{compra.getNombre(), compra.getDescripcion(), compra.getFecha(), compra.getUrgenteString(), compra.getUsuario().getNombre()});
@@ -207,7 +207,7 @@ public class PanelCompras extends JPanel implements ActionListener
 		
 		if(actionCommand.equals("addCompra"))
 		{
-			// Mostramos el frame para añadir una compra
+			// Mostramos el frame para aniadir una compra
 			FrameAddCompra fAddCompra = new FrameAddCompra(fPrincipal);
 			fAddCompra.setVisible(true);
 			
@@ -295,9 +295,9 @@ public class PanelCompras extends JPanel implements ActionListener
 	}
 	
 	/**
-	 * Elimina una compra a través del servicio web
+	 * Elimina una compra a traves del servicio web
 	 * @param compra Compra a eliminar
-	 * @return Exito de la operación
+	 * @return Exito de la operacion
 	 */
 	private boolean eliminarCompra(Compra compra)
 	{
