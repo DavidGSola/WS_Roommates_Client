@@ -22,8 +22,8 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import Modelos.Usuario;
-import Parsers.ParserUsuario;
+import Modelos.Compra;
+import Parsers.ParserCompra;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -40,19 +40,19 @@ public class PanelCompras extends JPanel implements ActionListener
 	FramePrincipal fPrincipal;
 	
 	/**
-	 * Botón de registrar un usuario
+	 * Botón de añadir compra
 	 */
-	private JButton jbRegistrarse;
+	private JButton jbAddCompra;
 	
 	/**
-	 * Botón de eliminar un usuario
+	 * Botón de eliminar compra
 	 */
 	private JButton jbEliminar;
 	
 	/**
-	 * Botón de actualizar un usuario
+	 * Botón de realizar compra
 	 */
-	private JButton jbActualizar;
+	private JButton jbComprar;
 	
 	/**
 	 * Botón de salir
@@ -60,9 +60,9 @@ public class PanelCompras extends JPanel implements ActionListener
 	private JButton jbSalir;
 	
 	/**
-	 * Tabla para mostrar la lista de usuarios
+	 * Tabla para mostrar la lista de Compras
 	 */
-	private JTable jtUsuarios;
+	private JTable jtCompras;
 	
 	/**
 	 * Scrollpane que permite hacer scrollable la tabla {@linkplain jtUsuarios}
@@ -72,7 +72,7 @@ public class PanelCompras extends JPanel implements ActionListener
 	/**
 	 * Lista de usuarios de la lista de correos
 	 */
-	private ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
+	private ArrayList<Compra> listaCompras = new ArrayList<Compra>();
 	
 	public PanelCompras(FramePrincipal fp)
 	{
@@ -82,7 +82,7 @@ public class PanelCompras extends JPanel implements ActionListener
 		this.setLayout(null);
 		
 		// Modelo de la tabla de los usuarios
-		DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Nombre", "Email"}, 0) 
+		DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Nombre", "Descripcion", "Fecha", "Urgente", "Usuario"}, 0) 
 		{
 		    @Override
 		    public boolean isCellEditable(int row, int column) 
@@ -91,30 +91,30 @@ public class PanelCompras extends JPanel implements ActionListener
 		    }
 		};
 		
-		jtUsuarios = new JTable(tableModel);
-		jtUsuarios.setFont(new Font("Calibri", Font.PLAIN, 16));
-		jtUsuarios.setBounds(20, 10, 540, 180);
+		jtCompras = new JTable(tableModel);
+		jtCompras.setFont(new Font("Calibri", Font.PLAIN, 16));
+		jtCompras.setBounds(20, 10, 540, 180);
 		
-		scrollPane = new JScrollPane(jtUsuarios);
+		scrollPane = new JScrollPane(jtCompras);
 		scrollPane.setBounds(20, 10, 540, 240);
 		this.add(scrollPane);
 	
 		// Rellenamos la tabla con los usuarios de la base de datos
 		rellenarTabla();
 		
-		jbRegistrarse = new JButton("RegistrarSE");
-		jbRegistrarse.addActionListener(this);
-		jbRegistrarse.setActionCommand("registrar");
-		jbRegistrarse.setFont(new Font("Calibri", Font.PLAIN, (16)));
-		jbRegistrarse.setBounds(580, 10, 180, 30);
-		this.add(jbRegistrarse);	
+		jbAddCompra = new JButton("Añadir Compra");
+		jbAddCompra.addActionListener(this);
+		jbAddCompra.setActionCommand("addCompra");
+		jbAddCompra.setFont(new Font("Calibri", Font.PLAIN, (16)));
+		jbAddCompra.setBounds(580, 10, 180, 30);
+		this.add(jbAddCompra);	
 	
-		jbActualizar = new JButton("Actualizar");
-		jbActualizar.addActionListener(this);
-		jbActualizar.setActionCommand("actualizar");
-		jbActualizar.setFont(new Font("Calibri", Font.PLAIN, (16)));
-		jbActualizar.setBounds(580, 50, 180, 30);
-		this.add(jbActualizar);
+		jbComprar = new JButton("Comprar");
+		jbComprar.addActionListener(this);
+		jbComprar.setActionCommand("comprar");
+		jbComprar.setFont(new Font("Calibri", Font.PLAIN, (16)));
+		jbComprar.setBounds(580, 50, 180, 30);
+		this.add(jbComprar);
 		
 		jbEliminar = new JButton("Eliminar");
 		jbEliminar.addActionListener(this);
@@ -136,7 +136,6 @@ public class PanelCompras extends JPanel implements ActionListener
 	 */
 	private void rellenarTabla()
 	{
-		//Create a "parser factory" for creating SAX parsers
         // Creamos una factoria de Parser
 		SAXParserFactory spfac = SAXParserFactory.newInstance();
 
@@ -144,28 +143,31 @@ public class PanelCompras extends JPanel implements ActionListener
         	// Utilizamos dicha factoría para crear un objeto SAXParser
         	SAXParser sp = spfac.newSAXParser();
 			
-        	// Creamoe el handler del Parser para los Usuarios
-			ParserUsuario handler = new ParserUsuario();
+        	// Creamoe el handler del Parser para las Compras
+			ParserCompra handler = new ParserCompra();
 			
-			// Hacemos la llamada al servicio web que nos devolverá un XML con los Usuarios
+			// Hacemos la llamada al servicio web que nos devolverá un XML con las Compras
 			ClientConfig config = new DefaultClientConfig();
 			Client cliente = Client.create(config);
 			WebResource servicio = cliente.resource(FramePrincipal.getBaseURI());
-			String usuariosXML = servicio.path("rest").path("usuarios").accept(MediaType.TEXT_XML).get(String.class);
+			String comprasXML = servicio.path("rest").path("compras").accept(MediaType.TEXT_XML).get(String.class);
 			
 			// Parseamos el String
-			sp.parse(new InputSource(new StringReader(usuariosXML)), handler);
+			sp.parse(new InputSource(new StringReader(comprasXML)), handler);
 			
-			// Leemos los usuarios a través del handler
-			ArrayList<Usuario> usuarios = handler.getList();
+			// Leemos las compras a través del handler
+			ArrayList<Compra> compras = handler.getList();
 			
-			// Añadimos la lista a la lista interna de los usuarios
-			listaUsuarios.addAll(usuarios);
+			// Añadimos la lista a la lista interna de las compras
+			listaCompras.addAll(compras);
 			
-			// Añadimos los usuarios a la tabla
-			DefaultTableModel model = (DefaultTableModel) jtUsuarios.getModel();
-			for(Usuario usuario : usuarios)
-				model.addRow(new Object[]{usuario.getNombre(), usuario.getEmail()});
+			// Añadimos las compras a la tabla
+			DefaultTableModel model = (DefaultTableModel) jtCompras.getModel();
+			for(Compra compra: compras)
+			{
+				System.out.println(compra.getNombre());
+				model.addRow(new Object[]{compra.getNombre(), compra.getDescripcion(), compra.getFecha(), compra.getUrgenteString(), compra.getUsuario().getNombre()});
+			}
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
@@ -183,14 +185,14 @@ public class PanelCompras extends JPanel implements ActionListener
 	 * Añade un usuario a la tabla que muestra la lista de los usuarios de la lista de correo
 	 * @param usuario
 	 */
-	public void addUsuarioToTable(Usuario usuario)
+	public void addCompraToTable(Compra compra)
 	{
 		// Añadimos el usuario a la lista interna
-		listaUsuarios.add(usuario);
+		listaCompras.add(compra);
 		
 		// Añadimos el usuario al modelo de la tabla para que se muestre
-		DefaultTableModel model = (DefaultTableModel) jtUsuarios.getModel();
-		model.addRow(new Object[]{usuario.getNombre(), usuario.getEmail()});
+		DefaultTableModel model = (DefaultTableModel) jtCompras.getModel();
+		model.addRow(new Object[]{compra.getNombre(), compra.getDescripcion(), compra.getFecha(), compra.getUrgenteString(), compra.getUsuario().getNombre()});
 	}
 	
 	@Override
@@ -198,16 +200,16 @@ public class PanelCompras extends JPanel implements ActionListener
 	{
 		String actionCommand = event.getActionCommand();
 		
-		if(actionCommand.equals("registrar"))
+		if(actionCommand.equals("addCompra"))
 		{
 			// Mostramos el frame para registrar usuarios
-			FrameRegistrar fRegistrar = new FrameRegistrar(fPrincipal);
-			fRegistrar.setVisible(true);
+			FrameAddCompra fAddCompra = new FrameAddCompra(fPrincipal);
+			fAddCompra.setVisible(true);
 			
 		}else if(actionCommand.equals("eliminar"))
 		{
 			// Obtenemos el indice de la fila seleccionada en la tabla
-			int index = jtUsuarios.getSelectedRow();
+			int index = jtCompras.getSelectedRow();
 			
 			// Comprobamos que se hay seleccionado un usuario
 			if(index == -1)
@@ -215,21 +217,21 @@ public class PanelCompras extends JPanel implements ActionListener
 			else
 			{
 				// Eliminamos el usuario llamado al servlet
-				boolean eliminado = eliminarUsuario(listaUsuarios.get(index));
+				boolean eliminado = eliminarCompra(listaCompras.get(index));
 				
 				if(eliminado)
 				{
-					DefaultTableModel model = (DefaultTableModel) jtUsuarios.getModel();
+					DefaultTableModel model = (DefaultTableModel) jtCompras.getModel();
 					
 					// Eliminamos el usuario del modelo de la tabla y de la lista interta
 					model.removeRow(index);
-					listaUsuarios.remove(index);
+					listaCompras.remove(index);
 				}
 			}
-		}else if(actionCommand.equals("actualizar"))
+		}else if(actionCommand.equals("comprar"))
 		{
 			// Obtenemos el indice de la fila seleccionada en la tabla
-			int index = jtUsuarios.getSelectedRow();
+			int index = jtCompras.getSelectedRow();
 			
 			if(index == -1)
 				JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario de la lista.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -245,9 +247,11 @@ public class PanelCompras extends JPanel implements ActionListener
 	 * @param usuario Usuario a eliminar
 	 * @return Exito de la operación
 	 */
-	private boolean eliminarUsuario(Usuario usuario)
+	private boolean eliminarCompra(Compra compra)
 	{
-		
+		/**
+		 * TODO: 
+		 */
 		return false;
 	}
 }

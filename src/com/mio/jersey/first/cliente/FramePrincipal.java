@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
@@ -16,14 +15,10 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,6 +28,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import Modelos.Compra;
 import Modelos.Usuario;
 import Parsers.ParserUsuario;
 
@@ -52,16 +48,10 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  */
 public class FramePrincipal extends JFrame implements ActionListener
 {
-	
 	/**
 	 * Panel de Login
 	 */
 	private JPanel panelLogin;
-	
-	/**
-	 * Panel de pestañas
-	 */
-	private JTabbedPane panelPestañas;
 	
 	/**
 	 * Area de texto para introducir el nombre
@@ -78,6 +68,11 @@ public class FramePrincipal extends JFrame implements ActionListener
 	 * Boton para registrarse en la pantalla de inicio
 	 */
 	private JButton jbRegistrarInicio;
+
+	/**
+	 * Panel de pestañas
+	 */
+	private JTabbedPane panelPestañas;
 	
 	/**
 	 * Referencia al panel de compañeros
@@ -236,7 +231,7 @@ public class FramePrincipal extends JFrame implements ActionListener
 		}else if(actionCommand.equals("registrarInicio"))
 		{
 			// Mostramos el frame para registrar usuarios
-			FrameRegistrar fRegistrar = new FrameRegistrar(null);
+			FrameAddUsuario fRegistrar = new FrameAddUsuario(null);
 			fRegistrar.setVisible(true);
 		}
 	}
@@ -248,6 +243,20 @@ public class FramePrincipal extends JFrame implements ActionListener
 	public void addUsuarioToTable(Usuario usuario)
 	{
 		panelCompañeros.addUsuarioToTable(usuario);
+	}
+	
+	/**
+	 * Añade una compra a la tabla que muestra la lista de los usuarios de la lista de correo
+	 * @param compra
+	 */
+	public void addCompraToTable(Compra compra)
+	{
+		panelCompras.addCompraToTable(compra);
+	}
+	
+	public Usuario getUsuarioSesion()
+	{
+		return usuarioSesion;
 	}
 	
 	public static URI getBaseURI(){

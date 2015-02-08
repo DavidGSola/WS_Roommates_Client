@@ -201,7 +201,7 @@ public class PanelCompañeros extends JPanel implements ActionListener
 		if(actionCommand.equals("registrar"))
 		{
 			// Mostramos el frame para registrar usuarios
-			FrameRegistrar fRegistrar = new FrameRegistrar(fPrincipal);
+			FrameAddUsuario fRegistrar = new FrameAddUsuario(fPrincipal);
 			fRegistrar.setVisible(true);
 			
 		}else if(actionCommand.equals("eliminar"))

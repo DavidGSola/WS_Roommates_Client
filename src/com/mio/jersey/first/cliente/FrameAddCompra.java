@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,8 +23,8 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import Modelos.Compra;
 import Modelos.Respuesta;
-import Modelos.Usuario;
 import Parsers.ParserRespuesta;
 
 import com.sun.jersey.api.client.Client;
@@ -40,7 +41,7 @@ import com.sun.jersey.api.representation.Form;
  * @author DavidGSola
  *
  */
-public class FrameRegistrar extends JFrame implements ActionListener
+public class FrameAddCompra extends JFrame implements ActionListener
 {
 	/**
 	 * Textfield donde escribir el nombre
@@ -48,14 +49,14 @@ public class FrameRegistrar extends JFrame implements ActionListener
 	private JTextField jtfNombre;
 	
 	/**
-	 * Textfield donde escribir el email
+	 * Textfield donde escribir la descripción
 	 */
-	private JTextField jtfEmail;
+	private JTextField jtfDescripcion;
 	
 	/**
-	 * Botón de registrar
+	 * Botón de añadir compra
 	 */
-	private JButton jbRegistrarse;
+	private JButton jbAddCompra;
 	
 	/**
 	 * Botón de cancelar el registro
@@ -70,7 +71,7 @@ public class FrameRegistrar extends JFrame implements ActionListener
 	/**
 	 * Crea la aplicación
 	 */
-	public FrameRegistrar(FramePrincipal principal) 
+	public FrameAddCompra(FramePrincipal principal) 
 	{
 		fPrincipal = principal;
 		initialize();
@@ -96,25 +97,25 @@ public class FrameRegistrar extends JFrame implements ActionListener
 		jtfNombre.setColumns(10);
 		this.add(jtfNombre);
 		
-		JLabel jlEmail = new JLabel("Email:");
-		jlEmail.setFont(new Font("Calibri", Font.PLAIN, (24)));
-		jlEmail.setBounds(20, 60, 500, 90);
-		this.add(jlEmail);
+		JLabel jlDescripcion = new JLabel("Descripción:");
+		jlDescripcion.setFont(new Font("Calibri", Font.PLAIN, (24)));
+		jlDescripcion.setBounds(20, 60, 500, 90);
+		this.add(jlDescripcion);
 		
-		jtfEmail = new JTextField();
-		jtfEmail.setForeground(Color.GRAY);
-		jtfEmail.setBounds(140, 80, 400, 45);
-		jtfEmail.setMargin(new Insets((5),(10),(5),(5)));
-		jtfEmail.setFont(new Font("Calibri", Font.PLAIN, (24)));
-		jtfEmail.setColumns(10);
-		this.add(jtfEmail);
+		jtfDescripcion = new JTextField();
+		jtfDescripcion.setForeground(Color.GRAY);
+		jtfDescripcion.setBounds(140, 80, 400, 45);
+		jtfDescripcion.setMargin(new Insets((5),(10),(5),(5)));
+		jtfDescripcion.setFont(new Font("Calibri", Font.PLAIN, (24)));
+		jtfDescripcion.setColumns(10);
+		this.add(jtfDescripcion);
 		
-		jbRegistrarse = new JButton("Aceptar");
-		jbRegistrarse.addActionListener(this);
-		jbRegistrarse.setActionCommand("registrar");
-		jbRegistrarse.setFont(new Font("Calibri", Font.PLAIN, (24)));
-		jbRegistrarse.setBounds(380, 200, 160, 45);
-		this.add(jbRegistrarse);	
+		jbAddCompra = new JButton("Aceptar");
+		jbAddCompra.addActionListener(this);
+		jbAddCompra.setActionCommand("registrar");
+		jbAddCompra.setFont(new Font("Calibri", Font.PLAIN, (24)));
+		jbAddCompra.setBounds(380, 200, 160, 45);
+		this.add(jbAddCompra);	
 		
 		jbCancelar = new JButton("Cancelar");
 		jbCancelar.addActionListener(this);
@@ -129,17 +130,20 @@ public class FrameRegistrar extends JFrame implements ActionListener
 		String actionCommand = e.getActionCommand();
 		if(actionCommand == "registrar")
 		{
-			Usuario usuario = null;
-			if(jtfNombre.getText().length()!=0 && jtfEmail.getText().length()!=0)
-				usuario = registrarUsuario(new Usuario(jtfNombre.getText(), jtfEmail.getText()) );
+			Compra compra= null;
+			if(jtfNombre.getText().length()!=0 && jtfDescripcion.getText().length()!=0)
+			{
+				Date date = new Date();
+				compra = registrarCompra(new Compra(fPrincipal.getUsuarioSesion(), jtfNombre.getText(), jtfDescripcion.getText(), String.valueOf(date.getTime())));
+			}
 			else
 				JOptionPane.showMessageDialog(this, "Debe rellenar todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 			
 			// Si se registra con exito lo añadimos a la tabla del frame principal
-			if(usuario != null)
+			if(compra != null)
 			{
 				if(fPrincipal != null)
-					fPrincipal.addUsuarioToTable(usuario);
+					fPrincipal.addCompraToTable(compra);
 				this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 			}
 		}
@@ -154,16 +158,17 @@ public class FrameRegistrar extends JFrame implements ActionListener
 	 * @param usuario
 	 * @return
 	 */
-	private Usuario registrarUsuario(Usuario usuario)
+	private Compra registrarCompra(Compra compra)
 	{
 		ClientConfig config = new DefaultClientConfig();
 		Client cliente = Client.create(config);
 		WebResource servicio = cliente.resource(FramePrincipal.getBaseURI());
 		
 		Form f = new Form();
-		f.add("email", usuario.getEmail());
-		f.add("nombre", usuario.getNombre());
-		String respuestaXML = servicio.path("rest").path("usuarios").accept(MediaType.TEXT_XML).post(String.class, f);
+		f.add("usuario", compra.getUsuario().getEmail());
+		f.add("descripcion", compra.getDescripcion());
+		f.add("nombre", compra.getNombre());
+		String respuestaXML = servicio.path("rest").path("compras").accept(MediaType.TEXT_XML).post(String.class, f);
 
 		SAXParserFactory spfac = SAXParserFactory.newInstance();
 
@@ -180,13 +185,13 @@ public class FrameRegistrar extends JFrame implements ActionListener
 			Respuesta respuesta = handler.getRespuesta();
 			if(!respuesta.isError())
 			{
-				JOptionPane.showMessageDialog(this, "Usuario " + usuario.getNombre() + " registrado correctamente.");
-				return usuario;
+				JOptionPane.showMessageDialog(this, "Compra " + compra.getNombre() + " registrado correctamente.");
+				return compra;
 			}
-			else if(respuesta.getMensaje().equalsIgnoreCase("Usuario existente"))
+			else 
 			{
 				JOptionPane.showMessageDialog(this,
-					    "No se ha podido registrar el usuario " + usuario.getNombre() + " debido a que ya existe el email.",
+					    "No se ha podido añadir la compra porque no existe el usuario.",
 					    "Advertencia",
 					    JOptionPane.WARNING_MESSAGE);
 				return null;
