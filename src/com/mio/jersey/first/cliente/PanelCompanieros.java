@@ -51,11 +51,6 @@ public class PanelCompanieros extends JPanel implements ActionListener
 	private JButton jbEliminar;
 	
 	/**
-	 * Botón de actualizar un usuario
-	 */
-	private JButton jbActualizar;
-	
-	/**
 	 * Botón de salir
 	 */
 	private JButton jbSalir;
@@ -100,7 +95,7 @@ public class PanelCompanieros extends JPanel implements ActionListener
 		scrollPane.setBounds(20, 10, 540, 240);
 		this.add(scrollPane);
 	
-		// Rellenamos la tabla con los usuarios de la base de datos
+		// Rellenamos la tabla con los usuarios del servicio web
 		rellenarTabla();
 		
 		jbRegistrarse = new JButton("Registrar");
@@ -109,13 +104,6 @@ public class PanelCompanieros extends JPanel implements ActionListener
 		jbRegistrarse.setFont(new Font("Calibri", Font.PLAIN, (16)));
 		jbRegistrarse.setBounds(580, 10, 180, 30);
 		this.add(jbRegistrarse);	
-	
-		jbActualizar = new JButton("Actualizar");
-		jbActualizar.addActionListener(this);
-		jbActualizar.setActionCommand("actualizar");
-		jbActualizar.setFont(new Font("Calibri", Font.PLAIN, (16)));
-		jbActualizar.setBounds(580, 50, 180, 30);
-		this.add(jbActualizar);
 		
 		jbEliminar = new JButton("Eliminar");
 		jbEliminar.addActionListener(this);
@@ -133,11 +121,10 @@ public class PanelCompanieros extends JPanel implements ActionListener
 	}
 	
 	/**
-	 * Obtiene y rellena la tabla con la lista de los usuarios haciendo una llamada al servlet
+	 * Obtiene y rellena la tabla con la lista de los usuarios haciendo una llamada al servicio web
 	 */
 	private void rellenarTabla()
 	{
-		//Create a "parser factory" for creating SAX parsers
         // Creamos una factoria de Parser
 		SAXParserFactory spfac = SAXParserFactory.newInstance();
 
@@ -145,7 +132,7 @@ public class PanelCompanieros extends JPanel implements ActionListener
         	// Utilizamos dicha factoría para crear un objeto SAXParser
         	SAXParser sp = spfac.newSAXParser();
 			
-        	// Creamoe el handler del Parser para los Usuarios
+        	// Creamos el handler del Parser para los Usuarios
 			ParserUsuario handler = new ParserUsuario();
 			
 			// Hacemos la llamada al servicio web que nos devolverá un XML con los Usuarios
@@ -167,6 +154,7 @@ public class PanelCompanieros extends JPanel implements ActionListener
 			DefaultTableModel model = (DefaultTableModel) jtUsuarios.getModel();
 			for(Usuario usuario : usuarios)
 				model.addRow(new Object[]{usuario.getNombre(), usuario.getEmail()});
+			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
@@ -215,7 +203,6 @@ public class PanelCompanieros extends JPanel implements ActionListener
 				JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario de la lista.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 			else
 			{
-				// Eliminamos el usuario llamado al servlet
 				boolean eliminado = eliminarUsuario(listaUsuarios.get(index));
 				
 				if(eliminado)
@@ -227,19 +214,6 @@ public class PanelCompanieros extends JPanel implements ActionListener
 					listaUsuarios.remove(index);
 				}
 			}
-		}else if(actionCommand.equals("actualizar"))
-		{
-			// Obtenemos el indice de la fila seleccionada en la tabla
-			int index = jtUsuarios.getSelectedRow();
-			
-			if(index == -1)
-				JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario de la lista.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-			else
-			{
-//				FrameActualizar fActualizar = new FrameActualizar(this,  listaUsuarios.get(index));
-//				fActualizar.setVisible(true);
-			}
-			
 		}else if(actionCommand.equals("salir"))
 		{
 			fPrincipal.dispatchEvent(new WindowEvent(fPrincipal, WindowEvent.WINDOW_CLOSING));
@@ -253,43 +227,10 @@ public class PanelCompanieros extends JPanel implements ActionListener
 	 */
 	private boolean eliminarUsuario(Usuario usuario)
 	{
-//		try
-//		{
-//			// Seleccionamos la acción a realizar
-//			String accion = "accion=eliminar&";
-//			// Añadimos el id del usuario para que lo sepa el Servlet
-//			String id = "id=" + usuario.getId() + "&";
-//			
-//			URL gwtServlet = new URL("http://localhost:8080/DSBCS_Practica2/ListaCorreoServlet");
-//			
-//			HttpURLConnection servletConnection = (HttpURLConnection) gwtServlet
-//					.openConnection();
-//			servletConnection.setUseCaches(false);
-//			servletConnection.setRequestMethod("POST");
-//			servletConnection.setDoOutput(true);
-//			OutputStream output = servletConnection.getOutputStream();
-//			
-//			output.write(accion.getBytes());
-//			output.write(id.getBytes());
-//			
-//			output.flush();
-//			output.close();
-//			
-//			// Leemos la respuesta
-//			String answer = servletConnection.getContentType();
-//			
-//			if(answer.equalsIgnoreCase("Correcto")) 
-//			{
-//				JOptionPane.showMessageDialog(this, "Usuario " + usuario.getNombre() + " eliminado correctamente.");
-//				
-//				return true;
-//			}
-//		} catch (MalformedURLException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		
+
+		/**
+		 * TODO:
+		 */
 		return false;
 	}
 }
