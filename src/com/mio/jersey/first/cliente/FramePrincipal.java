@@ -128,6 +128,7 @@ public class FramePrincipal extends JFrame implements ActionListener
 	 */
 	private void crearPanelLogin() {
 		this.setBounds(300,300,245,450);
+		setLocationRelativeTo(null);
 		
 		panelLogin = new JPanel();
 		panelLogin.setBounds(300, 300, 245, 450);
@@ -258,17 +259,36 @@ public class FramePrincipal extends JFrame implements ActionListener
 	}
 	
 	/**
-	 * Aniade una compra a la tabla que muestra la lista de los usuarios de la lista de correo
-	 * @param compra
+	 * Actualiza la tabla de las compras
 	 */
 	public void actualizaTablaCompra()
 	{
 		panelCompras.actualizaTablaCompra();
 	}
 	
+	/**
+	 * Actualiza la tabla de facturas
+	 */
+	public void actualizaTablaFacturas()
+	{
+		panelFacturas.actualizaTablaFacturas();
+	}
+	
+	/**
+	 * Devuelve el usuario que ha iniciado sesion.
+	 * @return Usuario que ha iniciado sesion
+	 */
 	public Usuario getUsuarioSesion()
 	{
 		return usuarioSesion;
+	}
+	
+	/**
+	 * Devuelve la lista de los usuarios actuales.
+	 * @return Lista con los usuarios
+	 */
+	public ArrayList<Usuario> getListaUsuarios() {
+		return panelCompanieros.getListaUsuarios();
 	}
 	
 	public static URI getBaseURI(){

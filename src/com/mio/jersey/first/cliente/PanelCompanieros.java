@@ -275,4 +275,12 @@ public class PanelCompanieros extends JPanel implements ActionListener
 		
 		return false;
 	}
+
+	/**
+	 * Devuelve la lista de usuarios.
+	 * @return Lista de los usuarios
+	 */
+	public ArrayList<Usuario> getListaUsuarios() {
+		return listaUsuarios;
+	}
 }

@@ -200,7 +200,7 @@ public class PanelFacturas extends JPanel implements ActionListener
 	}
 	
 	/**
-	 * Actualiza la tabla de compras y la lista interna
+	 * Actualiza la tabla de facturas y la lista interna
 	 */
 	public void actualizaTablaFacturas()
 	{
@@ -221,8 +221,8 @@ public class PanelFacturas extends JPanel implements ActionListener
 		if(actionCommand.equals("addFactura"))
 		{
 			// Mostramos el frame para aniadir una compra
-			FrameAddCompra fAddCompra = new FrameAddCompra(fPrincipal);
-			fAddCompra.setVisible(true);
+			FrameAddFactura fAddFactura = new FrameAddFactura(fPrincipal);
+			fAddFactura.setVisible(true);
 			
 		}else if(actionCommand.equals("eliminar"))
 		{
@@ -265,7 +265,7 @@ public class PanelFacturas extends JPanel implements ActionListener
 		ClientConfig config = new DefaultClientConfig();
 		Client cliente = Client.create(config);
 		WebResource servicio = cliente.resource(FramePrincipal.getBaseURI());
-		String respuestaXML = servicio.path("rest").path("factura/"+factura.getId()+"/"+fPrincipal.getUsuarioSesion().getEmail()).accept(MediaType.TEXT_XML).put(String.class);
+		String respuestaXML = servicio.path("rest").path("facturas/"+factura.getId()+"/"+fPrincipal.getUsuarioSesion().getEmail()).accept(MediaType.TEXT_XML).put(String.class);
 		
 		SAXParserFactory spfac = SAXParserFactory.newInstance();
 
