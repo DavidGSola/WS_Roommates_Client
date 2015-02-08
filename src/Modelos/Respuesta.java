@@ -1,7 +1,5 @@
 package Modelos;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 public class Respuesta {
 	boolean error;
 	String mensaje;
@@ -28,6 +26,4 @@ public class Respuesta {
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
 	}
-	
-	
 }
