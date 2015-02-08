@@ -9,10 +9,6 @@ public class Usuario
 	
 	private String email;
 	
-	//private List<Compra> compras = new ArrayList<>();
-
-//	private List<Factura> mFacturas = new ArrayList<>();
-	
 	public Usuario()
 	{
 	
@@ -20,7 +16,6 @@ public class Usuario
   
 	public Usuario (String nombre, String email)
 	{
-//		this.id = id;
 		this.nombre = nombre;
 		this.email = email;
 	}
@@ -53,23 +48,4 @@ public class Usuario
 		this.email = email;
 	}
 
-//	public List<Compra> getCompras() 
-//	{
-//		return compras;
-//	}
-//
-//	public void setCompras(List<Compra> compras) 
-//	{
-//		this.compras = compras;
-//	}
-
-//	public List<Factura> getFacturas() 
-//	{
-//		return mFacturas;
-//	}
-//
-//	public void setFacturas(List<Factura> facturas) 
-//	{
-//		this.mFacturas = facturas;
-//	}
 }
