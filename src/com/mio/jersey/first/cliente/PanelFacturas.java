@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -175,11 +176,15 @@ public class PanelFacturas extends JPanel implements ActionListener
 			DefaultTableModel model = (DefaultTableModel) jtFacturas.getModel();
 			for(Factura factura: facturas) {
 				String restantes = "";
-				for (Usuario u : factura.getUsuariosSinPagar()) {
-					restantes += u.getNombre() + ", ";
-				} 
-				restantes = restantes.substring(0,restantes.length()-2);
-				model.addRow(new Object[]{factura.getNombre(), factura.getDescripcion(), factura.getCantidad(), factura.getFechaCreacion(), restantes});
+				for (int i = 0; i < factura.getUsuariosSinPagar().size(); i++) {
+					Usuario u = factura.getUsuariosSinPagar().get(i);
+					restantes += u.getNombre();
+					if (i < factura.getUsuariosSinPagar().size()-1) {
+						restantes += ", ";
+					}
+				}
+				Date fecha = new Date(Long.parseLong(factura.getFechaCreacion()));
+				model.addRow(new Object[]{factura.getNombre(), factura.getDescripcion(), factura.getCantidad(), fecha, restantes});
 				
 			}
 			
