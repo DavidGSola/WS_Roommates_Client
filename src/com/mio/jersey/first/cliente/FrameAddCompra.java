@@ -41,6 +41,7 @@ import com.sun.jersey.api.representation.Form;
  * @author DavidGSola
  *
  */
+@SuppressWarnings("serial")
 public class FrameAddCompra extends JFrame implements ActionListener
 {
 	/**
@@ -133,8 +134,8 @@ public class FrameAddCompra extends JFrame implements ActionListener
 			Compra compra= null;
 			if(jtfNombre.getText().length()!=0 && jtfDescripcion.getText().length()!=0)
 			{
-				Date date = new Date();
-				compra = registrarCompra(new Compra(fPrincipal.getUsuarioSesion(), jtfNombre.getText(), jtfDescripcion.getText(), String.valueOf(date.getTime())));
+				String fecha = new Date().getTime()+"";
+				compra = registrarCompra(new Compra(fPrincipal.getUsuarioSesion(), jtfNombre.getText(), jtfDescripcion.getText(), fecha));
 			}
 			else
 				JOptionPane.showMessageDialog(this, "Debe rellenar todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -143,7 +144,8 @@ public class FrameAddCompra extends JFrame implements ActionListener
 			if(compra != null)
 			{
 				if(fPrincipal != null)
-					fPrincipal.addCompraToTable(compra);
+					fPrincipal.actualizaTablaCompra();
+				
 				this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 			}
 		}
@@ -165,7 +167,7 @@ public class FrameAddCompra extends JFrame implements ActionListener
 		WebResource servicio = cliente.resource(FramePrincipal.getBaseURI());
 		
 		Form f = new Form();
-		f.add("usuario", compra.getUsuario().getEmail());
+		f.add("email", compra.getUsuario().getEmail());
 		f.add("descripcion", compra.getDescripcion());
 		f.add("nombre", compra.getNombre());
 		String respuestaXML = servicio.path("rest").path("compras").accept(MediaType.TEXT_XML).post(String.class, f);

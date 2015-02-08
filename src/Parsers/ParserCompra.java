@@ -12,6 +12,7 @@ import Modelos.Usuario;
 public class ParserCompra extends DefaultHandler 
 {
 	private boolean nombreCompraEncontrado = false;
+	private boolean idCompraEncontrado = false;
 	private Compra compraTemp;
 	private Usuario usuarioTemp;
 	private String temp;
@@ -26,6 +27,7 @@ public class ParserCompra extends DefaultHandler
 		if (qName.equalsIgnoreCase("compra"))
 		{
 			compraTemp = new Compra();
+			idCompraEncontrado = false;
 			nombreCompraEncontrado = false;
 		}else if (qName.equalsIgnoreCase("usuario"))
 			usuarioTemp = new Usuario();	
@@ -39,8 +41,11 @@ public class ParserCompra extends DefaultHandler
 			compraTemp.setDescripcion(temp);
 		else if (qName.equalsIgnoreCase("fecha"))
 			compraTemp.setFecha(temp);
-		else if (qName.equalsIgnoreCase("id"))
+		else if (qName.equalsIgnoreCase("id") && !idCompraEncontrado)
+		{
 			compraTemp.setId(Integer.parseInt(temp));
+			idCompraEncontrado = true;
+		}
 		else if (qName.equalsIgnoreCase("nombre") && !nombreCompraEncontrado)
 		{
 			compraTemp.setNombre(temp);
@@ -56,7 +61,7 @@ public class ParserCompra extends DefaultHandler
 			compraTemp.setUsuario(usuarioTemp);
 		else if (qName.equalsIgnoreCase("email"))
 			usuarioTemp.setEmail(temp);
-		else if (qName.equalsIgnoreCase("id"))
+		else if (qName.equalsIgnoreCase("id")  && idCompraEncontrado)
 			usuarioTemp.setId(Integer.parseInt(temp));
 		else if (qName.equalsIgnoreCase("nombre") && nombreCompraEncontrado)
 			usuarioTemp.setNombre(temp);

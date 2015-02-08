@@ -23,7 +23,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import Modelos.Compra;
+import Modelos.Respuesta;
 import Parsers.ParserCompra;
+import Parsers.ParserRespuesta;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -32,6 +34,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
+@SuppressWarnings("serial")
 public class PanelCompras extends JPanel implements ActionListener
 {
 	/**
@@ -73,7 +76,7 @@ public class PanelCompras extends JPanel implements ActionListener
 	 * Lista de usuarios de la lista de correos
 	 */
 	private ArrayList<Compra> listaCompras = new ArrayList<Compra>();
-	
+
 	public PanelCompras(FramePrincipal fp)
 	{
 		fPrincipal = fp;
@@ -82,7 +85,7 @@ public class PanelCompras extends JPanel implements ActionListener
 		this.setLayout(null);
 		
 		// Modelo de la tabla de los usuarios
-		DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Nombre", "Descripcion", "Fecha", "Urgente", "Usuario"}, 0) 
+		DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Nombre", "Descripcion", "Fecha", "Urgente", "Usuario Responsable"}, 0) 
 		{
 		    @Override
 		    public boolean isCellEditable(int row, int column) 
@@ -164,10 +167,8 @@ public class PanelCompras extends JPanel implements ActionListener
 			// Añadimos las compras a la tabla
 			DefaultTableModel model = (DefaultTableModel) jtCompras.getModel();
 			for(Compra compra: compras)
-			{
-				System.out.println(compra.getNombre());
 				model.addRow(new Object[]{compra.getNombre(), compra.getDescripcion(), compra.getFecha(), compra.getUrgenteString(), compra.getUsuario().getNombre()});
-			}
+			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
@@ -182,17 +183,17 @@ public class PanelCompras extends JPanel implements ActionListener
 	}
 	
 	/**
-	 * Añade un usuario a la tabla que muestra la lista de los usuarios de la lista de correo
-	 * @param usuario
+	 * Actualiza la tabla de compras 
 	 */
-	public void addCompraToTable(Compra compra)
+	public void actualizaTablaCompra()
 	{
-		// Añadimos el usuario a la lista interna
-		listaCompras.add(compra);
-		
-		// Añadimos el usuario al modelo de la tabla para que se muestre
+		listaCompras.clear();
 		DefaultTableModel model = (DefaultTableModel) jtCompras.getModel();
-		model.addRow(new Object[]{compra.getNombre(), compra.getDescripcion(), compra.getFecha(), compra.getUrgenteString(), compra.getUsuario().getNombre()});
+	
+		while(model.getRowCount() != 0)
+			model.removeRow(0);
+		
+		rellenarTabla();
 	}
 	
 	@Override
@@ -234,14 +235,63 @@ public class PanelCompras extends JPanel implements ActionListener
 			int index = jtCompras.getSelectedRow();
 			
 			if(index == -1)
-				JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario de la lista.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-			
+				JOptionPane.showMessageDialog(this, "Debe seleccionar una compra de la lista.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+			else
+				marcarComprada(listaCompras.get(index));
 		}else if(actionCommand.equals("salir"))
 		{
 			fPrincipal.dispatchEvent(new WindowEvent(fPrincipal, WindowEvent.WINDOW_CLOSING));
 		}
 	}
 	
+	
+	private void marcarComprada(Compra compra)
+	{
+		ClientConfig config = new DefaultClientConfig();
+		Client cliente = Client.create(config);
+		WebResource servicio = cliente.resource(FramePrincipal.getBaseURI());
+		String respuestaXML = servicio.path("rest").path("compras/"+compra.getId()+"/"+fPrincipal.getUsuarioSesion().getEmail()).accept(MediaType.TEXT_XML).put(String.class);
+		
+		SAXParserFactory spfac = SAXParserFactory.newInstance();
+
+		try {
+        	// Utilizamos dicha factoría para crear un objeto SAXParser
+        	SAXParser sp = spfac.newSAXParser();
+			
+        	// Creamoe el handler del Parser para la Respuesta
+			ParserRespuesta handler = new ParserRespuesta();
+			
+			// Parseamos el String
+			sp.parse(new InputSource(new StringReader(respuestaXML)), handler);
+			
+			Respuesta respuesta = handler.getRespuesta();
+			if(!respuesta.isError())
+			{
+				JOptionPane.showMessageDialog(this, "Compra " + compra.getNombre() + " realizada correctamente.");
+
+				actualizaTablaCompra();
+			}
+			else 
+			{
+				JOptionPane.showMessageDialog(this,
+					    "El usuario con correo " + fPrincipal.getUsuarioSesion().getEmail() + " no le toca realizar esa compra.",
+					    "Advertencia",
+					    JOptionPane.WARNING_MESSAGE);
+			}
+				
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (UniformInterfaceException e) {
+			e.printStackTrace();
+		} catch (ClientHandlerException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	/**
 	 * Elimina un usuario dado de la lista de correo
 	 * @param usuario Usuario a eliminar
