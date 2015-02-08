@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -171,7 +172,7 @@ public class PanelCompras extends JPanel implements ActionListener
 			// Aniadimos las compras a la tabla
 			DefaultTableModel model = (DefaultTableModel) jtCompras.getModel();
 			for(Compra compra: compras)
-				model.addRow(new Object[]{compra.getNombre(), compra.getDescripcion(), compra.getFecha(), compra.getUrgenteString(), compra.getUsuario().getNombre()});
+				model.addRow(new Object[]{compra.getNombre(), compra.getDescripcion(), new Date(Long.parseLong(compra.getFecha())), compra.getUrgenteString(), compra.getUsuario().getNombre()});
 			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
