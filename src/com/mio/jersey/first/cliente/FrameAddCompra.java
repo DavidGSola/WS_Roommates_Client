@@ -8,7 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -134,8 +136,10 @@ public class FrameAddCompra extends JFrame implements ActionListener
 			Compra compra= null;
 			if(jtfNombre.getText().length()!=0 && jtfDescripcion.getText().length()!=0)
 			{
-				String fecha = new Date().getTime()+"";
-				compra = registrarCompra(new Compra(fPrincipal.getUsuarioSesion(), jtfNombre.getText(), jtfDescripcion.getText(), fecha));
+				// Se actualiza la fecha a la actual
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				Calendar cal = Calendar.getInstance();
+				compra = registrarCompra(new Compra(fPrincipal.getUsuarioSesion(), jtfNombre.getText(), jtfDescripcion.getText(), dateFormat.format(cal.getTime())));
 			}
 			else
 				JOptionPane.showMessageDialog(this, "Debe rellenar todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);

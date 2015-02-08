@@ -22,7 +22,9 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import Modelos.Respuesta;
 import Modelos.Usuario;
+import Parsers.ParserRespuesta;
 import Parsers.ParserUsuario;
 
 import com.sun.jersey.api.client.Client;
@@ -167,19 +169,19 @@ public class PanelCompanieros extends JPanel implements ActionListener
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Añade un usuario a la tabla que muestra la lista de los usuarios de la lista de correo
-	 * @param usuario
+	 * Actualiza la tabla de usuarios y la lista interna
 	 */
-	public void addUsuarioToTable(Usuario usuario)
+	public void actualizaTablaUsuarios()
 	{
-		// Añadimos el usuario a la lista interna
-		listaUsuarios.add(usuario);
-		
-		// Añadimos el usuario al modelo de la tabla para que se muestre
+		listaUsuarios.clear();
 		DefaultTableModel model = (DefaultTableModel) jtUsuarios.getModel();
-		model.addRow(new Object[]{usuario.getNombre(), usuario.getEmail()});
+	
+		while(model.getRowCount() != 0)
+			model.removeRow(0);
+		
+		rellenarTabla();
 	}
 	
 	@Override
@@ -207,11 +209,8 @@ public class PanelCompanieros extends JPanel implements ActionListener
 				
 				if(eliminado)
 				{
-					DefaultTableModel model = (DefaultTableModel) jtUsuarios.getModel();
-					
-					// Eliminamos el usuario del modelo de la tabla y de la lista interta
-					model.removeRow(index);
-					listaUsuarios.remove(index);
+					actualizaTablaUsuarios();
+					fPrincipal.actualizaTablaCompra();
 				}
 			}
 		}else if(actionCommand.equals("salir"))
@@ -221,16 +220,59 @@ public class PanelCompanieros extends JPanel implements ActionListener
 	}
 	
 	/**
-	 * Elimina un usuario dado de la lista de correo
+	 * Elimina un usuario a través del servicio web
 	 * @param usuario Usuario a eliminar
 	 * @return Exito de la operación
 	 */
 	private boolean eliminarUsuario(Usuario usuario)
 	{
+		ClientConfig config = new DefaultClientConfig();
+		
+		Client cliente = Client.create(config);
+		WebResource servicio = cliente.resource(FramePrincipal.getBaseURI());
+		String respuestaXML = servicio.path("rest").path("usuarios/"+usuario.getEmail()).accept(MediaType.TEXT_XML).delete(String.class);
+		
+		SAXParserFactory spfac = SAXParserFactory.newInstance();
+	
+		try {
+	    	SAXParser sp = spfac.newSAXParser();
+			
+	    	// Creamos el handler del Parser para la Respuesta
+			ParserRespuesta handler = new ParserRespuesta();
+			
+			// Parseamos el String
+			sp.parse(new InputSource(new StringReader(respuestaXML)), handler);
+			
+			Respuesta respuesta = handler.getRespuesta();
+			
+			if(!respuesta.isError())
+			{
+				JOptionPane.showMessageDialog(this, "Usuario " + usuario.getNombre() + " eliminada correctamente.");
 
-		/**
-		 * TODO:
-		 */
+				return true;
+			}
+			else 
+			{
+				JOptionPane.showMessageDialog(this,
+						"No se ha podido elimnar el usuario " + usuario.getNombre() + ".",
+					    "Advertencia",
+					    JOptionPane.WARNING_MESSAGE);
+				
+				return false;
+			}
+		
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (UniformInterfaceException e) {
+			e.printStackTrace();
+		} catch (ClientHandlerException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 }

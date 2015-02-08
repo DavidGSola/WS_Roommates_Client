@@ -242,12 +242,11 @@ public class FramePrincipal extends JFrame implements ActionListener
 	}
 
 	/**
-	 * Añade un usuario a la tabla que muestra la lista de los usuarios de la lista de correo
-	 * @param usuario
+	 * Actualiza la tabla de comapañeros
 	 */
-	public void addUsuarioToTable(Usuario usuario)
+	public void actualizaTablaUsuarios()
 	{
-		panelCompanieros.addUsuarioToTable(usuario);
+		panelCompanieros.actualizaTablaUsuarios();
 	}
 	
 	/**

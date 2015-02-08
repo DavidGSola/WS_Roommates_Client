@@ -140,7 +140,7 @@ public class FrameAddUsuario extends JFrame implements ActionListener
 			if(usuario != null)
 			{
 				if(fPrincipal != null)
-					fPrincipal.addUsuarioToTable(usuario);
+					fPrincipal.actualizaTablaUsuarios();
 				this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 			}
 		}
