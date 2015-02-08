@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -91,6 +92,10 @@ public class FramePrincipal extends JFrame implements ActionListener
 	
 	public static void main(String[] args) 
 	{
+		try { // Para que no se vea con el look normal de Swing sino con el del sistema
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e)
+		{ System.err.println("Unable to load System look and feel"); }
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try 
