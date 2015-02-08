@@ -77,6 +77,10 @@ public class PanelCompras extends JPanel implements ActionListener
 	 */
 	private ArrayList<Compra> listaCompras = new ArrayList<Compra>();
 
+	/**
+	 * Constructor del Panel
+	 * @param fp Referencia al FramePrincipal
+	 */
 	public PanelCompras(FramePrincipal fp)
 	{
 		fPrincipal = fp;
@@ -102,7 +106,7 @@ public class PanelCompras extends JPanel implements ActionListener
 		scrollPane.setBounds(20, 10, 540, 240);
 		this.add(scrollPane);
 	
-		// Rellenamos la tabla con los usuarios de la base de datos
+		// Rellenamos la tabla con las compras que hay en el serviciow eb
 		rellenarTabla();
 		
 		jbAddCompra = new JButton("Añadir Compra");
@@ -135,7 +139,7 @@ public class PanelCompras extends JPanel implements ActionListener
 	}
 	
 	/**
-	 * Obtiene y rellena la tabla con la lista de los usuarios haciendo una llamada al servlet
+	 * Obtiene y rellena la tabla con la lista de las compras haciendo una llamada al servicio web
 	 */
 	private void rellenarTabla()
 	{
@@ -146,7 +150,7 @@ public class PanelCompras extends JPanel implements ActionListener
         	// Utilizamos dicha factoría para crear un objeto SAXParser
         	SAXParser sp = spfac.newSAXParser();
 			
-        	// Creamoe el handler del Parser para las Compras
+        	// Creamos el handler del Parser para las Compras
 			ParserCompra handler = new ParserCompra();
 			
 			// Hacemos la llamada al servicio web que nos devolverá un XML con las Compras
@@ -183,7 +187,7 @@ public class PanelCompras extends JPanel implements ActionListener
 	}
 	
 	/**
-	 * Actualiza la tabla de compras 
+	 * Actualiza la tabla de compras y la lista interna
 	 */
 	public void actualizaTablaCompra()
 	{
@@ -203,7 +207,7 @@ public class PanelCompras extends JPanel implements ActionListener
 		
 		if(actionCommand.equals("addCompra"))
 		{
-			// Mostramos el frame para registrar usuarios
+			// Mostramos el frame para añadir una compra
 			FrameAddCompra fAddCompra = new FrameAddCompra(fPrincipal);
 			fAddCompra.setVisible(true);
 			
@@ -212,22 +216,17 @@ public class PanelCompras extends JPanel implements ActionListener
 			// Obtenemos el indice de la fila seleccionada en la tabla
 			int index = jtCompras.getSelectedRow();
 			
-			// Comprobamos que se hay seleccionado un usuario
+			// Comprobamos que hay seleccionada una compra en la tabla
 			if(index == -1)
 				JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario de la lista.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 			else
 			{
-				// Eliminamos el usuario llamado al servlet
+				// Eliminamos la compra llamando al servicio webs
 				boolean eliminado = eliminarCompra(listaCompras.get(index));
 				
+				// Actualizamos la tabla
 				if(eliminado)
-				{
-					DefaultTableModel model = (DefaultTableModel) jtCompras.getModel();
-					
-					// Eliminamos el usuario del modelo de la tabla y de la lista interta
-					model.removeRow(index);
-					listaCompras.remove(index);
-				}
+					actualizaTablaCompra();
 			}
 		}else if(actionCommand.equals("comprar"))
 		{
@@ -244,7 +243,10 @@ public class PanelCompras extends JPanel implements ActionListener
 		}
 	}
 	
-	
+	/**
+	 * Marca como realizada una compra haciendo uso del servicio web
+	 * @param compra Compra a marcar como realizada
+	 */
 	private void marcarComprada(Compra compra)
 	{
 		ClientConfig config = new DefaultClientConfig();
@@ -255,10 +257,9 @@ public class PanelCompras extends JPanel implements ActionListener
 		SAXParserFactory spfac = SAXParserFactory.newInstance();
 
 		try {
-        	// Utilizamos dicha factoría para crear un objeto SAXParser
         	SAXParser sp = spfac.newSAXParser();
 			
-        	// Creamoe el handler del Parser para la Respuesta
+        	// Creamos el handler del Parser para la Respuesta
 			ParserRespuesta handler = new ParserRespuesta();
 			
 			// Parseamos el String
@@ -292,16 +293,61 @@ public class PanelCompras extends JPanel implements ActionListener
 		}
 		
 	}
+	
 	/**
-	 * Elimina un usuario dado de la lista de correo
-	 * @param usuario Usuario a eliminar
+	 * Elimina una compra a través del servicio web
+	 * @param compra Compra a eliminar
 	 * @return Exito de la operación
 	 */
 	private boolean eliminarCompra(Compra compra)
 	{
-		/**
-		 * TODO: 
-		 */
+		ClientConfig config = new DefaultClientConfig();
+	
+		Client cliente = Client.create(config);
+		WebResource servicio = cliente.resource(FramePrincipal.getBaseURI());
+		String respuestaXML = servicio.path("rest").path("compras/"+compra.getId()).accept(MediaType.TEXT_XML).delete(String.class);
+		
+		SAXParserFactory spfac = SAXParserFactory.newInstance();
+	
+		try {
+	    	SAXParser sp = spfac.newSAXParser();
+			
+	    	// Creamos el handler del Parser para la Respuesta
+			ParserRespuesta handler = new ParserRespuesta();
+			
+			// Parseamos el String
+			sp.parse(new InputSource(new StringReader(respuestaXML)), handler);
+			
+			Respuesta respuesta = handler.getRespuesta();
+			
+			if(!respuesta.isError())
+			{
+				JOptionPane.showMessageDialog(this, "Compra " + compra.getNombre() + " eliminada correctamente.");
+
+				return true;
+			}
+			else 
+			{
+				JOptionPane.showMessageDialog(this,
+						"No se ha podido elimnar la compra " + compra.getNombre() + ".",
+					    "Advertencia",
+					    JOptionPane.WARNING_MESSAGE);
+				
+				return false;
+			}
+		
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (UniformInterfaceException e) {
+			e.printStackTrace();
+		} catch (ClientHandlerException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 }
