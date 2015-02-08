@@ -32,7 +32,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
-public class PanelCompañeros extends JPanel implements ActionListener
+public class PanelCompanieros extends JPanel implements ActionListener
 {
 	/**
 	 * Referencia al frame principal
@@ -74,7 +74,7 @@ public class PanelCompañeros extends JPanel implements ActionListener
 	 */
 	private ArrayList<Usuario> listaUsuarios = new ArrayList<Usuario>();
 	
-	public PanelCompañeros(FramePrincipal fp)
+	public PanelCompanieros(FramePrincipal fp)
 	{
 		fPrincipal = fp;
 		

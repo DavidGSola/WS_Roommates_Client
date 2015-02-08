@@ -72,12 +72,12 @@ public class FramePrincipal extends JFrame implements ActionListener
 	/**
 	 * Panel de pestañas
 	 */
-	private JTabbedPane panelPestañas;
+	private JTabbedPane panelPestanias;
 	
 	/**
 	 * Referencia al panel de compañeros
 	 */
-	private PanelCompañeros panelCompañeros;
+	private PanelCompanieros panelCompanieros;
 
 	/**
 	 * Referencia al panel de compras
@@ -168,19 +168,19 @@ public class FramePrincipal extends JFrame implements ActionListener
 	/**
 	 * Inicializa el panel principal
 	 */
-	private void crearPanelesPestañas() {
+	private void crearPanelesPestanias() {
 		this.setBounds(100, 100, 790, 320);
 		
-		panelPestañas = new JTabbedPane();
+		panelPestanias = new JTabbedPane();
 		
-		panelCompañeros = new PanelCompañeros(this);
-		panelPestañas.addTab("Compañeros", panelCompañeros);
+		panelCompanieros = new PanelCompanieros(this);
+		panelPestanias.addTab("Compañeros", panelCompanieros);
 		
 		panelCompras = new PanelCompras(this);
-		panelPestañas.addTab("Compras", panelCompras);
+		panelPestanias.addTab("Compras", panelCompras);
 		
 		getContentPane().removeAll();
-		getContentPane().add(panelPestañas);
+		getContentPane().add(panelPestanias);
 	}
 	
 	@Override
@@ -214,7 +214,7 @@ public class FramePrincipal extends JFrame implements ActionListener
 				if(usuarios.size() == 1)
 				{
 					usuarioSesion = usuarios.get(0);
-					crearPanelesPestañas();
+					crearPanelesPestanias();
 				}
 			
 			} catch (ParserConfigurationException e) {
@@ -242,7 +242,7 @@ public class FramePrincipal extends JFrame implements ActionListener
 	 */
 	public void addUsuarioToTable(Usuario usuario)
 	{
-		panelCompañeros.addUsuarioToTable(usuario);
+		panelCompanieros.addUsuarioToTable(usuario);
 	}
 	
 	/**
