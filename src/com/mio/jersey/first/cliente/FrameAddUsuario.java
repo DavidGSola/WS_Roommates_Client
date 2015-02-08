@@ -40,6 +40,7 @@ import com.sun.jersey.api.representation.Form;
  * @author DavidGSola
  *
  */
+@SuppressWarnings("serial")
 public class FrameAddUsuario extends JFrame implements ActionListener
 {
 	/**

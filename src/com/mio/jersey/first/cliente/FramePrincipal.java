@@ -28,7 +28,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import Modelos.Compra;
 import Modelos.Usuario;
 import Parsers.ParserUsuario;
 
@@ -46,6 +45,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
  * @author DavidGSola
  *
  */
+@SuppressWarnings("serial")
 public class FramePrincipal extends JFrame implements ActionListener
 {
 	/**
@@ -249,9 +249,9 @@ public class FramePrincipal extends JFrame implements ActionListener
 	 * Añade una compra a la tabla que muestra la lista de los usuarios de la lista de correo
 	 * @param compra
 	 */
-	public void addCompraToTable(Compra compra)
+	public void actualizaTablaCompra()
 	{
-		panelCompras.addCompraToTable(compra);
+		panelCompras.actualizaTablaCompra();
 	}
 	
 	public Usuario getUsuarioSesion()

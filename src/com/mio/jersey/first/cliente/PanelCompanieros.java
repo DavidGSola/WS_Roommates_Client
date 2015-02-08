@@ -32,6 +32,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
+@SuppressWarnings("serial")
 public class PanelCompanieros extends JPanel implements ActionListener
 {
 	/**
