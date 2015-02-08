@@ -101,7 +101,7 @@ public class FrameAddFactura extends JFrame implements ActionListener
 		jtfNombre.setColumns(10);
 		this.add(jtfNombre);
 		
-		JLabel jlDescripcion = new JLabel("Descripcion:");
+		JLabel jlDescripcion = new JLabel("Descripci\u00F3n:");
 		jlDescripcion.setFont(new Font("Calibri", Font.PLAIN, (24)));
 		jlDescripcion.setBounds(20, 60, 500, 90);
 		this.add(jlDescripcion);
