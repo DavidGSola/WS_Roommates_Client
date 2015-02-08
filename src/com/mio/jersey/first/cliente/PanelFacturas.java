@@ -23,11 +23,9 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import Modelos.Compra;
 import Modelos.Factura;
 import Modelos.Respuesta;
 import Modelos.Usuario;
-import Parsers.ParserCompra;
 import Parsers.ParserFactura;
 import Parsers.ParserRespuesta;
 
@@ -113,16 +111,16 @@ public class PanelFacturas extends JPanel implements ActionListener
 		// Rellenamos la tabla con las compras que hay en el servicio web
 		rellenarTabla();
 		
-		jbAddFactura = new JButton("Aniadir Compra");
+		jbAddFactura = new JButton("A\u00F1adir Factura");
 		jbAddFactura.addActionListener(this);
-		jbAddFactura.setActionCommand("addCompra");
+		jbAddFactura.setActionCommand("addFactura");
 		jbAddFactura.setFont(new Font("Calibri", Font.PLAIN, (16)));
 		jbAddFactura.setBounds(580, 10, 180, 30);
 		this.add(jbAddFactura);	
 	
-		jbPagar = new JButton("Comprar");
+		jbPagar = new JButton("Pagar");
 		jbPagar.addActionListener(this);
-		jbPagar.setActionCommand("comprar");
+		jbPagar.setActionCommand("pagar");
 		jbPagar.setFont(new Font("Calibri", Font.PLAIN, (16)));
 		jbPagar.setBounds(580, 50, 180, 30);
 		this.add(jbPagar);
@@ -204,7 +202,7 @@ public class PanelFacturas extends JPanel implements ActionListener
 	/**
 	 * Actualiza la tabla de compras y la lista interna
 	 */
-	public void actualizaTablaCompra()
+	public void actualizaTablaFacturas()
 	{
 		listaFacturas.clear();
 		DefaultTableModel model = (DefaultTableModel) jtFacturas.getModel();
@@ -220,7 +218,7 @@ public class PanelFacturas extends JPanel implements ActionListener
 	{
 		String actionCommand = event.getActionCommand();
 		
-		if(actionCommand.equals("addCompra"))
+		if(actionCommand.equals("addFactura"))
 		{
 			// Mostramos el frame para aniadir una compra
 			FrameAddCompra fAddCompra = new FrameAddCompra(fPrincipal);
@@ -233,7 +231,7 @@ public class PanelFacturas extends JPanel implements ActionListener
 			
 			// Comprobamos que hay seleccionada una compra en la tabla
 			if(index == -1)
-				JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario de la lista.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Debe seleccionar una factura de la lista.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 			else
 			{
 				// Eliminamos la compra llamando al servicio webs
@@ -241,9 +239,9 @@ public class PanelFacturas extends JPanel implements ActionListener
 				
 				// Actualizamos la tabla
 				if(eliminado)
-					actualizaTablaCompra();
+					actualizaTablaFacturas();
 			}
-		}else if(actionCommand.equals("comprar"))
+		}else if(actionCommand.equals("pagar"))
 		{
 			// Obtenemos el indice de la fila seleccionada en la tabla
 			int index = jtFacturas.getSelectedRow();
@@ -285,7 +283,7 @@ public class PanelFacturas extends JPanel implements ActionListener
 			{
 				JOptionPane.showMessageDialog(this, "Factura " + factura.getNombre() + " pagada correctamente.");
 
-				actualizaTablaCompra();
+				actualizaTablaFacturas();
 			}
 			else 
 			{
