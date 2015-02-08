@@ -260,6 +260,6 @@ public class FramePrincipal extends JFrame implements ActionListener
 	}
 	
 	public static URI getBaseURI(){
-		return UriBuilder.fromUri("http://localhost:8080/DSBCS_Tutorial_Jersey").build();
+		return UriBuilder.fromUri(Config.baseURIString).build();
 	}
 }
