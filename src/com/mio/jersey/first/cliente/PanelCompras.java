@@ -90,7 +90,7 @@ public class PanelCompras extends JPanel implements ActionListener
 		this.setLayout(null);
 		
 		// Modelo de la tabla de los usuarios
-		DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Nombre", "Descripcion", "Fecha", "Urgente", "Usuario Responsable"}, 0) 
+		DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Nombre", "Descripcion", "Fecha", "Usuario Responsable"}, 0) 
 		{
 		    @Override
 		    public boolean isCellEditable(int row, int column) 
@@ -172,7 +172,7 @@ public class PanelCompras extends JPanel implements ActionListener
 			// Aniadimos las compras a la tabla
 			DefaultTableModel model = (DefaultTableModel) jtCompras.getModel();
 			for(Compra compra: compras)
-				model.addRow(new Object[]{compra.getNombre(), compra.getDescripcion(), new Date(Long.parseLong(compra.getFecha())), compra.getUrgenteString(), compra.getUsuario().getNombre()});
+				model.addRow(new Object[]{compra.getNombre(), compra.getDescripcion(), new Date(Long.parseLong(compra.getFecha())), compra.getUsuario().getNombre()});
 			
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();

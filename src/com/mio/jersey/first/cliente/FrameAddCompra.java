@@ -175,7 +175,7 @@ public class FrameAddCompra extends JFrame implements ActionListener
 		SAXParserFactory spfac = SAXParserFactory.newInstance();
 
 		try {
-        	// Utilizamos dicha factoría para crear un objeto SAXParser
+        	// Utilizamos dicha factoria para crear un objeto SAXParser
         	SAXParser sp = spfac.newSAXParser();
 			
         	// Creamoe el handler del Parser para la Respuesta
@@ -193,7 +193,7 @@ public class FrameAddCompra extends JFrame implements ActionListener
 			else 
 			{
 				JOptionPane.showMessageDialog(this,
-					    "No se ha podido añadir la compra porque no existe el usuario.",
+					    "No se ha podido a\u00F1adir la compra porque no existe el usuario.",
 					    "Advertencia",
 					    JOptionPane.WARNING_MESSAGE);
 				return null;
